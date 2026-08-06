@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FashionStore</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, Helvetica, sans-serif;}
+body{background:#fff;}
+
+/* LOGIN PAGE */
+.login-page{height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(to right,#000,#ff69b4,#fff);}
+.login-box{background:white;padding:40px;border-radius:15px;width:360px;box-shadow:0 5px 20px rgba(0,0,0,0.2);text-align:center;}
+.login-box h2{color:#ff69b4; margin-bottom:20px;}
+.login-box.role-select{display:flex;gap:10px;margin-bottom:15px;}
+.role-select button{flex:1;padding:10px;background:#ddd;border:none;border-radius:10px;cursor:pointer;font-weight:bold;}
+.role-select button.active{background:#ff69b4;color:white;}
+.role-select button.admin.active{background:#000;}
+.login-box input,.login-box select,.login-box textarea{width:100%;padding:12px;margin:10px 0;border:1px solid #ddd;border-radius:10px;}
+.login-box textarea{resize:none;height:80px;}
+.login-box button.login-btn{width:100%;padding:12px;background:#ff69b4;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:bold;}
+.login-box button.login-btn:hover{background:#ff1493;}
+.note{font-size:12px;margin-top:10px;color:#555;}
+
+/* Navbar */
+header{background:#000;color:white;display:flex;justify-content:space-between;align-items:center;padding:15px 8%;position:sticky;top:0;z-index:10;}
+.logo{font-size:28px;font-weight:bold;color:#ff69b4;}
+nav a{color:white;text-decoration:none;margin-left:20px;font-weight:bold;cursor:pointer;position:relative;}
+nav a:hover{color:#ff69b4;}
+.cart-count{background:#ff69b4;color:white;border-radius:50%;padding:2px 7px;font-size:12px;position:absolute;top:-8px;right:-12px;}
+
+/* Hero */
+.hero{height:350px;background:linear-gradient(to right,#000,#ff69b4,#fff);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+.hero h1{font-size:42px;color:white;}
+.hero p{margin-top:10px;font-size:18px;color:white;}
+.search{margin-top:20px;}
+.search input{padding:12px;width:300px;border-radius:30px;border:none;outline:none;}
+.search button{padding:12px 20px;background:#000;color:white;border:none;border-radius:30px;cursor:pointer;}
+.search button:hover{background:#ff1493;}
+
+/* Kategori */
+.kategori{padding:40px;text-align:center;}
+.kategori h2{margin-bottom:20px;}
+.kategori button{padding:12px 20px;margin:10px;background:#ff69b4;border:none;color:white;border-radius:30px;cursor:pointer;}
+.kategori button:hover{background:#000;}
+
+/* Produk */
+.produk{padding:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px;}
+.card{background:white;border-radius:15px;overflow:hidden;box-shadow:0px 5px 15px rgba(0,0,0,.2);transition:.3s;display:flex;flex-direction:column;}
+.card:hover{transform:translateY(-5px);}
+.card img{width:100%;height:280px;object-fit:cover;}
+.card-content{padding:15px;flex:1;display:flex;flex-direction:column;}
+.card h3{margin-bottom:5px;}
+.card.desc{font-size:13px;color:#555;margin-bottom:10px;flex:1;}
+.card p{color:#ff1493;font-weight:bold;font-size:18px;margin-bottom:10px;}
+.card button{width:100%;padding:12px;background:#000;color:white;border:none;cursor:pointer;}
+.card button:hover{background:#ff69b4;}
+
+/* KERANJANG */
+.keranjang{padding:40px;background:#f8f8f8;}
+.keranjang-item{display:flex;gap:15px;background:white;padding:15px;border-radius:10px;margin-bottom:10px;align-items:center;}
+.keranjang-item img{width:80px;height:80px;object-fit:cover;border-radius:10px;}
+.keranjang-info{flex:1;}
+.keranjang-info h4{margin-bottom:5px;}
+.keranjang-info p{color:#ff1493;font-weight:bold;}
+.btn-hapus{background:#ff4d4d;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;}
+.checkout-btn{width:100%;padding:15px;background:#ff69b4;color:white;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:20px;}
+.checkout-btn:hover{background:#000;}
+
+/* Admin + Laporan */
+.admin{background:#000;color:white;padding:40px;}
+.admin h2{margin-bottom:20px;color:#ff69b4;}
+.admin input,.admin select,.admin textarea{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;}
+.admin textarea{height:70px;resize:none;}
+.admin button{padding:10px 20px;background:#ff69b4;border:none;color:white;cursor:pointer;border-radius:8px;}
+.admin.filter{display:flex;gap:10px;margin-bottom:15px;}
+.admin table{width:100%;margin-top:20px;background:#222;border-radius:10px;overflow:hidden;}
+.admin table th,.admin table td{padding:12px;text-align:left;border-bottom:1px solid #444;}
+.status-badge{padding:5px 10px;border-radius:20px;font-size:12px;color:white;}
+.status-kirim{background:#ff69b4;}
+.status-selesai{background:#4CAF50;}
+
+/* Footer */
+footer{background:#111;color:white;text-align:center;padding:20px;margin-top:30px;}
+
+/* Hide pages */
+.page{display:none;}
+.page.active{display:block;}
+</style>
+</head>
+<body>
+
+<!-- ========== HALAMAN LOGIN 1 SAJA ========== -->
+<div id="loginPage" class="login-page page active">
+  <div class="login-box">
+    <h2>LOGIN FASHIONSTORE</h2>
+    <div class="role-select">
+      <button id="btnCustomer" class="active" onclick="pilihRole('customer')">Customer</button>
+      <button id="btnAdmin" class="admin" onclick="pilihRole('admin')">Admin</button>
+    </div>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button class="login-btn" onclick="login()">Masuk</button>
+    <p class="note">Customer: customer / customer123 <br> Admin: admin / admin123</p>
+  </div>
+</div>
+
+<!-- ========== DASHBOARD CUSTOMER ========== -->
+<div id="customerPage" class="page">
+<header>
+  <div class="logo">FASHION STORE</div>
+  <nav>
+    <a onclick="showPage('customerPage')">Home</a>
+    <a href="#produkCust">Produk</a>
+    <a onclick="showPage('keranjangPage')">Keranjang <span id="cartCount" class="cart-count">0</span></a>
+    <a href="#statusCust">Status</a>
+    <a onclick="logout()">Logout</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Fashion Pria & Wanita Modern</h1>
+  <p>Koleksi Baju Terbaru Harga Terbaik</p>
+  <div class="search">
+    <input type="text" id="searchInput" placeholder="Cari Baju...">
+    <button onclick="cari()">Cari</button>
+  </div>
+</section>
+
+<section class="kategori">
+  <h2>Kategori</h2>
+  <button onclick="kategori('Kaos')">Kaos</button>
+  <button onclick="kategori('Kemeja')">Kemeja</button>
+  <button onclick="kategori('Celana')">Celana</button>
+  <button onclick="kategori('Jaket')">Jaket</button>
+  <button onclick="kategori('Dress')">Dress</button>
+</section>
+
+<section class="produk" id="produkCust"></section>
+
+<!-- HALAMAN KERANJANG -->
+<section class="keranjang" id="keranjangPage" style="display:none;">
+  <h2>Keranjang Belanja</h2>
+  <div id="listKeranjang"></div>
+  <h3 id="totalHarga">Total: Rp 0</h3>
+  <button class="checkout-btn" onclick="checkout()">Checkout Sekarang</button>
+</section>
+
+<section class="admin" id="statusCust">
+  <h2>Status Pengiriman Saya</h2>
+  <table id="tabelStatusCustomer">
+    <tr><th>No Pesanan</th><th>Produk</th><th>Tanggal</th><th>Status</th></tr>
+  </table>
+</section>
+
+<footer>
+  <h3>© 2026 FASHION STORE</h3>
+  <p>Belanja Baju Berkualitas Dengan Harga Terbaik</p>
+</footer>
+</div>
+
+<!-- ========== DASHBOARD ADMIN ========== -->
+<div id="adminPage" class="page">
+<header>
+  <div class="logo">FASHION STORE - ADMIN</div>
+  <nav>
+    <a onclick="showPage('adminPage')">Dashboard</a>
+    <a href="#adminPanel">Tambah Produk</a>
+    <a href="#laporan">Laporan</a>
+    <a onclick="logout()">Logout</a>
+  </nav>
+</header>
+
+<section class="admin" id="adminPanel">
+  <h2>Panel Admin - Tambah Produk & Pesanan</h2>
+  <input type="text" id="namaProduk" placeholder="Nama Produk">
+  <textarea id="deskripsiProduk" placeholder="Deskripsi Produk"></textarea>
+  <input type="number" id="hargaProduk" placeholder="Harga">
+  <input type="text" id="urlGambar" placeholder="URL Gambar">
+  <hr style="margin:15px 0; border-color:#444;">
+  <input type="text" id="namaCustomer" placeholder="Nama Customer">
+  <input type="date" id="tglPesanan">
+  <select id="statusPesanan">
+    <option value="Dikirim">Dikirim</option>
+    <option value="Selesai">Selesai</option>
+  </select>
+  <button onclick="tambahProduk()">Tambah Produk + Pesanan</button>
+</section>
+
+<section class="admin" id="laporan">
+  <h2>Laporan Penjualan & Status Pengiriman</h2>
+  <div class="filter">
+    <input type="date" id="tglAwal">
+    <input type="date" id="tglAkhir">
+    <button onclick="filterLaporan()">Filter</button>
+  </div>
+  <table id="tabelLaporan">
+    <tr><th>No</th><th>Customer</th><th>Produk</th><th>Total</th><th>Tanggal</th><th>Status</th><th>Aksi</th></tr>
+  </table>
+</section>
+
+<footer>
+  <h3>© 2026 FASHION STORE ADMIN</h3>
+</footer>
+</div>
+
+<script>
+let role = 'customer';
+let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+
+// Data simpan di localStorage
+let produkList = JSON.parse(localStorage.getItem('produk_baju')) || [
+  {nama: "Kaos Oversize Premium", deskripsi: "Bahan cotton 24s tebal, nyaman dan adem. Tersedia S-XL", harga: 99000, gambar: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500"},
+  {nama: "Kemeja Flanel Pria", deskripsi: "Bahan flanel premium, cocok untuk santai dan kerja", harga: 149000, gambar: "https://images.unsplash.com/photo-1596755094514-19f4a8a4b1c4?w=500"},
+  {nama: "Celana Jeans Slimfit", deskripsi: "Jeans stretch, nyaman dipakai seharian. Warna dark blue", harga: 199000, gambar: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=500"},
+  {nama: "Jaket Bomber Wanita", deskripsi: "Bahan parasut water resist, model kekinian", harga: 249000, gambar: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500"},
+  {nama: "Dress Midi Floral", deskripsi: "Bahan rayon motif bunga, cocok untuk kondangan", harga: 179000, gambar: "https://images.unsplash.com/photo-1515372039744-2s123456789?w=500"}
+];
+
+let laporanList = JSON.parse(localStorage.getItem('laporan_baju')) || [
+  {no:1, customer:"customer", produk:"Kaos Oversize Premium", harga:99000, tanggal:"2026-08-01", status:"Dikirim"},
+  {no:2, customer:"customer", produk:"Kemeja Flanel Pria", harga:149000, tanggal:"2026-08-03", status:"Selesai"}
+];
+
+function pilihRole(r){
+  role = r;
+  document.getElementById('btnCustomer').classList.remove('active');
+  document.getElementById('btnAdmin').classList.remove('active');
+  if(r=='customer') document.getElementById('btnCustomer').classList.add('active');
+  else document.getElementById('btnAdmin').classList.add('active');
+}
+
+function tampilkanProduk(){
+  let container = document.getElementById('produkCust');
+  container.innerHTML = '';
+  produkList.forEach(p => {
+    container.innerHTML += `
+      <div class="card">
+        <img src="${p.gambar}">
+        <div class="card-content">
+          <h3>${p.nama}</h3>
+          <p class="desc">${p.deskripsi}</p>
+          <p>Rp ${p.harga.toLocaleString('id-ID')}</p>
+        </div>
+        <button onclick="tambahKeranjang('${p.nama}', ${p.harga}, '${p.gambar}')">Beli Sekarang</button>
+      </div>
+    `;
+  });
+}
+
+function tambahKeranjang(nama, harga, gambar){
+  let item = keranjang.find(k => k.nama == nama);
+  if(item){ item.jumlah += 1; }
+  else{ keranjang.push({nama, harga, gambar, jumlah:1}); }
+  localStorage.setItem('keranjang', JSON.stringify(keranjang));
+  updateCartCount();
+  alert(nama + " ditambahkan ke keranjang");
+}
+
+function updateCartCount(){
+  document.getElementById('cartCount').innerText = keranjang.reduce((total, item) => total + item.jumlah, 0);
+}
+
+function tampilkanKeranjang(){
+  document.getElementById('keranjangPage').style.display = 'block';
+  let list = document.getElementById('listKeranjang');
+  list.innerHTML = '';
+  let total = 0;
+  keranjang.forEach((item, i) => {
+    total += item.harga * item.jumlah;
+    list.innerHTML += `
+      <div class="keranjang-item">
+        <img src="${item.gambar}">
+        <div class="keranjang-info">
+          <h4>${item.nama}</h4>
+          <p>Rp ${item.harga.toLocaleString('id-ID')} x ${item.jumlah}</p>
+        </div>
+        <button class="btn-hapus" onclick="hapusKeranjang(${i})">Hapus</button>
+      </div>
+    `;
+  });
+  document.getElementById('totalHarga').innerText = "Total: Rp " + total.toLocaleString('id-ID');
+}
+
+function hapusKeranjang(index){
+  keranjang.splice(index, 1);
+  localStorage.setItem('keranjang', JSON.stringify(keranjang));
+  updateCartCount();
+  tampilkanKeranjang();
+}
+
+function checkout(){
+  if(keranjang.length == 0){ alert("Keranjang kosong!"); return; }
+  let tanggal = new Date().toISOString().split('T')[0];
+  keranjang.forEach(item => {
+    laporanList.push({no:laporanList.length+1, customer:"customer", produk:item.nama, harga:item.harga * item.jumlah, tanggal, status:"Dikirim"});
+  });
+  localStorage.setItem('laporan_baju', JSON.stringify(laporanList));
+  keranjang = [];
+  localStorage.setItem('keranjang', JSON.stringify(keranjang));
+  updateCartCount();
+  tampilkanKeranjang();
+  tampilkanStatusCustomer();
+  alert("Checkout berhasil! Pesanan sedang diproses");
+}
+
+function tampilkanLaporan(data = laporanList){
+  let tabel = document.getElementById('tabelLaporan');
+  tabel.innerHTML = `<tr><th>No</th><th>Customer</th><th>Produk</th><th>Total</th><th>Tanggal</th><th>Status</th><th>Aksi</th></tr>`;
+  data.forEach((l, i) => {
+    let statusClass = l.status == 'Dikirim'? 'status-kirim' : 'status-selesai';
+    let aksi = l.status == 'Dikirim'? `<button onclick="ubahStatus(${i})">Selesai</button>` : '-';
+    tabel.innerHTML += `
+      <tr>
+        <td>${i+1}</td><td>${l.customer}</td><td>${l.produk}</td>
+        <td>Rp ${l.harga.toLocaleString('id-ID')}</td><td>${l.tanggal}</td>
+        <td><span class="status-badge ${statusClass}">${l.status}</span></td><td>${aksi}</td>
+      </tr>`;
+  });
+}
+
+function tampilkanStatusCustomer(){
+  let tabel = document.getElementById('tabelStatusCustomer');
+  tabel.innerHTML = `<tr><th>No Pesanan</th><th>Produk</th><th>Tanggal</th><th>Status</th></tr>`;
+  laporanList.filter(l => l.customer == 'customer').forEach((l, i) => {
+    let statusClass = l.status == 'Dikirim'? 'status-kirim' : 'status-selesai';
+    tabel.innerHTML += `
+      <tr><td>#ORD00${i+1}</td><td>${l.produk}</td><td>${l.tanggal}</td>
+      <td><span class="status-badge ${statusClass}">${l.status}</span></td></tr>`;
+  });
+}
+
+function tambahProduk(){
+  let nama = document.getElementById('namaProduk').value;
+  let deskripsi = document.getElementById('deskripsiProduk').value;
+  let harga = document.getElementById('hargaProduk').value;
+  let gambar = document.getElementById('urlGambar').value;
+  let customer = document.getElementById('namaCustomer').value;
+  let tanggal = document.getElementById('tglPesanan').value;
+  let status = document.getElementById('statusPesanan').value;
+
+  if(nama && deskripsi && harga && gambar){
+    produkList.push({nama, deskripsi, harga: parseInt(harga), gambar});
+    localStorage.setItem('produk_baju', JSON.stringify(produkList));
+    tampilkanProduk();
+
+    if(customer && tanggal){
+      laporanList.push({no:laporanList.length+1, customer, produk:nama, harga:parseInt(harga), tanggal, status});
+      localStorage.setItem('laporan_baju', JSON.stringify(laporanList));
+      tampilkanLaporan();
+      tampilkanStatusCustomer();
+    }
+    alert("Produk "+nama+" berhasil ditambahkan");
+    document.querySelectorAll('#adminPanel input, #adminPanel textarea').forEach(i => i.value = '');
+  } else { alert("Isi semua data produk!"); }
+}
+
+function filterLaporan(){
+  let awal = document.getElementById('tglAwal').value;
+  let akhir = document.getElementById('tglAkhir').value;
+  let filtered = laporanList.filter(l => l.tanggal >= awal && l.tanggal <= akhir);
+  tampilkanLaporan(filtered);
+}
+
+function ubahStatus(index){
+  laporanList[index].status = 'Selesai';
+  localStorage.setItem('laporan_baju', JSON.stringify(laporanList));
+  tampilkanLaporan();
+  tampilkanStatusCustomer();
+}
+
+// Login
+function login(){
+  let u = document.getElementById('username').value;
+  let p = document.getElementById('password').value;
+
+  if(role=='admin' && u=='admin' && p=='admin123'){
+    showPage('adminPage'); tampilkanLaporan();
+  }else if(role=='customer' && u=='customer' && p=='customer123'){
+    showPage('customerPage'); tampilkanProduk(); tampilkanStatusCustomer(); updateCartCount();
+  }else{
+    alert('Username atau Password salah!');
+  }
+}
+function logout(){ showPage('loginPage'); document.getElementById('username').value = ''; document.getElementById('password').value = ''; }
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id == 'customerPage'){ document.getElementById('keranjangPage').style.display = 'none'; }
+  if(id == 'keranjangPage'){ tampilkanKeranjang(); }
+}
+function cari(){ alert("Fitur pencarian: "+document.getElementById('searchInput').value); }
+function kategori(nama){ alert("Kategori : "+nama); }
+
+window.onload = function(){ tampilkanProduk(); updateCartCount(); }
+</script>
+
+</body>
+</html>
