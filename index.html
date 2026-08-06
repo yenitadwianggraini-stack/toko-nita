@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HijabStore</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, Helvetica, sans-serif;}
+body{background:#fff;}
+
+/* LOGIN PAGE */
+.login-page{
+height:100vh;display:flex;justify-content:center;align-items:center;
+background:linear-gradient(to right,#000,#ff69b4,#fff);gap:30px;padding:20px;
+}
+.login-box{
+background:white;padding:35px;border-radius:15px;width:320px;
+box-shadow:0 5px 20px rgba(0,0,0,0.2);text-align:center;
+}
+.login-box.admin{border-top:5px solid #000;}
+.login-box.customer{border-top:5px solid #ff69b4;}
+.login-box h2{margin-bottom:15px;}
+.login-box.admin h2{color:#000;}
+.login-box.customer h2{color:#ff69b4;}
+.login-box input{width:100%;padding:12px;margin:10px 0;border:1px solid #ddd;border-radius:10px;}
+.login-box button{width:100%;padding:12px;background:#ff69b4;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:bold;}
+.login-box.admin button{background:#000;}
+.login-box button:hover{opacity:0.8;}
+.note{font-size:12px;margin-top:10px;color:#555;}
+
+/* Navbar */
+header{background:#000;color:white;display:flex;justify-content:space-between;align-items:center;padding:15px 8%;}
+.logo{font-size:28px;font-weight:bold;color:#ff69b4;}
+nav a{color:white;text-decoration:none;margin-left:20px;font-weight:bold;cursor:pointer;}
+nav a:hover{color:#ff69b4;}
+
+/* Hero */
+.hero{height:330px;background:linear-gradient(to right,#000,#ff69b4,#fff);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+.hero h1{font-size:42px;color:white;}
+.hero p{margin-top:10px;font-size:18px;color:white;}
+.search{margin-top:20px;}
+.search input{padding:12px;width:300px;border-radius:30px;border:none;outline:none;}
+.search button{padding:12px 20px;background:#000;color:white;border:none;border-radius:30px;cursor:pointer;}
+.search button:hover{background:#ff1493;}
+
+/* Kategori */
+.kategori{padding:40px;text-align:center;}
+.kategori h2{margin-bottom:20px;}
+.kategori button{padding:12px 20px;margin:10px;background:#ff69b4;border:none;color:white;border-radius:30px;cursor:pointer;}
+.kategori button:hover{background:black;}
+
+/* Produk */
+.produk{padding:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:25px;}
+.card{background:white;border-radius:15px;overflow:hidden;box-shadow:0px 5px 15px rgba(0,0,0,.2);transition:.3s;cursor:pointer;}
+.card:hover{transform:scale(1.05);}
+.card img{width:100%;height:250px;object-fit:cover;}
+.card h3{padding:10px;}
+.card p{padding:0 10px 10px;color:#ff1493;font-weight:bold;}
+.card button{width:100%;padding:12px;background:black;color:white;border:none;cursor:pointer;}
+.card button:hover{background:#ff69b4;}
+
+/* Admin + Laporan */
+.admin{background:#000;color:white;padding:40px;margin-top:50px;}
+.admin h2{margin-bottom:20px;}
+.admin input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;}
+.admin button{padding:10px 20px;background:#ff69b4;border:none;color:white;cursor:pointer;border-radius:8px;}
+.admin table{width:100%;margin-top:20px;background:#222;border-radius:10px;overflow:hidden;}
+.admin table th, .admin table td{padding:12px;text-align:left;border-bottom:1px solid #444;}
+.status-badge{padding:5px 10px;border-radius:20px;font-size:12px;}
+.status-kirim{background:#ff69b4;}
+.status-selesai{background:#4CAF50;}
+
+/* Footer */
+footer{background:#111;color:white;text-align:center;padding:20px;margin-top:30px;}
+
+/* Hide pages */
+.page{display:none;}
+.page.active{display:block;}
+</style>
+</head>
+<body>
+
+<!-- ========== 2 HALAMAN LOGIN ========== -->
+<div id="loginPage" class="login-page page active">
+  
+  <!-- LOGIN CUSTOMER -->
+  <div class="login-box customer">
+    <h2>LOGIN CUSTOMER</h2>
+    <input type="text" id="userCust" placeholder="Username Customer">
+    <input type="password" id="passCust" placeholder="Password">
+    <button onclick="loginCustomer()">Masuk</button>
+    <p class="note">Demo: customer / customer123</p>
+  </div>
+
+  <!-- LOGIN ADMIN -->
+  <div class="login-box admin">
+    <h2>LOGIN ADMIN</h2>
+    <input type="text" id="userAdmin" placeholder="Username Admin">
+    <input type="password" id="passAdmin" placeholder="Password">
+    <button onclick="loginAdmin()">Masuk</button>
+    <p class="note">Demo: admin / admin123</p>
+  </div>
+
+</div>
+
+<!-- ========== DASHBOARD CUSTOMER ========== -->
+<div id="customerPage" class="page">
+<header>
+  <div class="logo">HIJAB STORE</div>
+  <nav>
+    <a onclick="showPage('customerPage')">Home</a>
+    <a href="#produkCust">Produk</a>
+    <a href="#statusCust">Status</a>
+    <a onclick="logout()">Logout</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Fashion Hijab Modern</h1>
+  <p>Koleksi Hijab Premium Harga Terbaik</p>
+  <div class="search">
+    <input type="text" placeholder="Cari Hijab...">
+    <button onclick="cari()">Cari</button>
+  </div>
+</section>
+
+<section class="kategori">
+  <h2>Kategori</h2>
+  <button onclick="kategori('Pashmina')">Pashmina</button>
+  <button onclick="kategori('Segi Empat')">Segi Empat</button>
+  <button onclick="kategori('Instan')">Instan</button>
+  <button onclick="kategori('Bergo')">Bergo</button>
+</section>
+
+<section class="produk" id="produkCust">
+  <div class="card" onclick="beli('Hijab Pashmina Premium')">
+    <img src="https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500">
+    <h3>Hijab Pashmina Premium</h3>
+    <p>Rp 75.000</p>
+    <button>Beli Sekarang</button>
+  </div>
+  <div class="card" onclick="beli('Hijab Segi Empat')">
+    <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500">
+    <h3>Hijab Segi Empat</h3>
+    <p>Rp 55.000</p>
+    <button>Beli Sekarang</button>
+  </div>
+  <div class="card" onclick="beli('Hijab Instan')">
+    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500">
+    <h3>Hijab Instan</h3>
+    <p>Rp 68.000</p>
+    <button>Beli Sekarang</button>
+  </div>
+  <div class="card" onclick="beli('Hijab Bergo')">
+    <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=500">
+    <h3>Hijab Bergo</h3>
+    <p>Rp 80.000</p>
+    <button>Beli Sekarang</button>
+  </div>
+</section>
+
+<section class="admin" id="statusCust">
+  <h2>Status Pengiriman Saya</h2>
+  <table>
+    <tr><th>No Pesanan</th><th>Produk</th><th>Status</th></tr>
+    <tr><td>#ORD001</td><td>Hijab Pashmina Premium</td><td><span class="status-badge status-kirim">Dikirim</span></td></tr>
+    <tr><td>#ORD002</td><td>Hijab Segi Empat</td><td><span class="status-badge status-selesai">Selesai</span></td></tr>
+  </table>
+</section>
+
+<footer>
+  <h3>© 2026 HIJAB STORE</h3>
+  <p>Belanja Hijab Berkualitas Dengan Harga Terbaik</p>
+</footer>
+</div>
+
+<!-- ========== DASHBOARD ADMIN ========== -->
+<div id="adminPage" class="page">
+<header>
+  <div class="logo">HIJAB STORE - ADMIN</div>
+  <nav>
+    <a onclick="showPage('adminPage')">Dashboard</a>
+    <a href="#adminPanel">Tambah Produk</a>
+    <a href="#laporan">Laporan</a>
+    <a onclick="logout()">Logout</a>
+  </nav>
+</header>
+
+<section class="admin" id="adminPanel">
+  <h2>Panel Admin - Tambah Produk</h2>
+  <input type="text" id="namaProduk" placeholder="Nama Produk">
+  <input type="number" id="hargaProduk" placeholder="Harga">
+  <input type="text" id="urlGambar" placeholder="URL Gambar">
+  <button onclick="admin()">Tambah Produk</button>
+</section>
+
+<section class="admin" id="laporan">
+  <h2>Laporan Penjualan & Status Pengiriman</h2>
+  <table>
+    <tr><th>No</th><th>Customer</th><th>Produk</th><th>Total</th><th>Status</th><th>Aksi</th></tr>
+    <tr><td>1</td><td>Ani</td><td>Hijab Pashmina Premium</td><td>Rp 75.000</td><td><span class="status-badge status-kirim">Dikirim</span></td><td><button onclick="ubahStatus(this)">Selesai</button></td></tr>
+    <tr><td>2</td><td>Budi</td><td>Hijab Instan</td><td>Rp 68.000</td><td><span class="status-badge status-selesai">Selesai</span></td><td>-</td></tr>
+  </table>
+</section>
+
+<footer>
+  <h3>© 2026 HIJAB STORE ADMIN</h3>
+</footer>
+</div>
+
+<script>
+function loginCustomer(){
+  let u = document.getElementById('userCust').value;
+  let p = document.getElementById('passCust').value;
+  if(u=='customer' && p=='customer123'){
+    showPage('customerPage');
+  }else{
+    alert('Username atau Password Customer salah!');
+  }
+}
+
+function loginAdmin(){
+  let u = document.getElementById('userAdmin').value;
+  let p = document.getElementById('passAdmin').value;
+  if(u=='admin' && p=='admin123'){
+    showPage('adminPage');
+  }else{
+    alert('Username atau Password Admin salah!');
+  }
+}
+
+function logout(){
+  showPage('loginPage');
+  document.getElementById('userCust').value = '';
+  document.getElementById('passCust').value = '';
+  document.getElementById('userAdmin').value = '';
+  document.getElementById('passAdmin').value = '';
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function cari(){ alert("Fitur pencarian berhasil diklik"); }
+function kategori(nama){ alert("Kategori : "+nama); }
+function beli(nama){ alert("Produk "+nama+" ditambahkan ke keranjang"); }
+function admin(){
+  let nama = document.getElementById('namaProduk').value;
+  let harga = document.getElementById('hargaProduk').value;
+  if(nama && harga){ alert("Produk "+nama+" berhasil ditambahkan"); }
+  else{ alert("Isi semua data produk!"); }
+}
+function ubahStatus(btn){
+  btn.parentElement.previousElementSibling.innerHTML = '<span class="status-badge status-selesai">Selesai</span>';
+  btn.remove();
+  alert('Status diubah menjadi Selesai');
+}
+</script>
+
+</body>
+</html>
