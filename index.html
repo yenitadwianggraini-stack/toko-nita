@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hijab Store</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#fff;
+}
+
+header{
+background:#000;
+color:white;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-size:28px;
+font-weight:bold;
+color:#ff4fa3;
+}
+
+nav{
+display:flex;
+gap:20px;
+align-items:center;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+}
+
+.search{
+padding:8px;
+border-radius:20px;
+border:none;
+width:200px;
+}
+
+.cart{
+background:#ff4fa3;
+padding:8px 15px;
+border-radius:20px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.admin{
+background:white;
+color:#000;
+padding:8px 15px;
+border-radius:20px;
+text-decoration:none;
+font-weight:bold;
+}
+
+.banner{
+height:300px;
+background:linear-gradient(to right,#000,#ffb6d9,#fff);
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+font-size:40px;
+font-weight:bold;
+}
+
+.judul{
+text-align:center;
+margin:30px;
+font-size:35px;
+color:#ff4fa3;
+}
+
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+padding:20px;
+}
+
+.card{
+background:white;
+border-radius:15px;
+box-shadow:0 0 10px rgba(0,0,0,.2);
+padding:15px;
+text-align:center;
+transition:.3s;
+cursor:pointer;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.card img{
+width:100%;
+height:220px;
+object-fit:cover;
+border-radius:10px;
+}
+
+.card h3{
+margin:10px;
+}
+
+.price{
+color:#ff4fa3;
+font-size:20px;
+font-weight:bold;
+}
+
+button{
+margin-top:10px;
+padding:10px;
+width:100%;
+border:none;
+background:#ff4fa3;
+color:white;
+border-radius:10px;
+cursor:pointer;
+font-size:16px;
+}
+
+button:hover{
+background:black;
+}
+
+footer{
+background:black;
+color:white;
+padding:20px;
+text-align:center;
+margin-top:30px;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+
+<div class="logo">
+HIJAB STORE
+</div>
+
+<nav>
+
+<input
+type="text"
+class="search"
+placeholder="Cari hijab..."
+onkeyup="cariProduk()"
+id="search">
+
+<div class="cart">
+🛒 Keranjang :
+<span id="jumlah">0</span>
+</div>
+
+<a href="#" class="admin">
+Admin
+</a>
+
+</nav>
+
+</header>
+
+<div class="banner">
+Koleksi Hijab Terbaru
+</div>
+
+<h2 class="judul">
+Produk Hijab
+</h2>
+
+<div class="container" id="produk">
+
+<div class="card">
+<img src="https://via.placeholder.com/250x250.png?text=Hijab+Paris">
+<h3>Hijab Paris</h3>
+<div class="price">Rp35.000</div>
+<button onclick="tambah()">Tambah Keranjang</button>
+</div>
+
+<div class="card">
+<img src="https://via.placeholder.com/250x250.png?text=Pashmina">
+<h3>Pashmina Premium</h3>
+<div class="price">Rp55.000</div>
+<button onclick="tambah()">Tambah Keranjang</button>
+</div>
+
+<div class="card">
+<img src="https://via.placeholder.com/250x250.png?text=Segi+Empat">
+<h3>Hijab Segi Empat</h3>
+<div class="price">Rp40.000</div>
+<button onclick="tambah()">Tambah Keranjang</button>
+</div>
+
+<div class="card">
+<img src="https://via.placeholder.com/250x250.png?text=Voal">
+<h3>Voal Premium</h3>
+<div class="price">Rp60.000</div>
+<button onclick="tambah()">Tambah Keranjang</button>
+</div>
+
+<div class="card">
+<img src="https://via.placeholder.com/250x250.png?text=Instan">
+<h3>Hijab Instan</h3>
+<div class="price">Rp45.000</div>
+<button onclick="tambah()">Tambah Keranjang</button>
+</div>
+
+<div class="card">
+<img src="https://via.placeholder.com/250x250.png?text=Bergo">
+<h3>Hijab Bergo</h3>
+<div class="price">Rp50.000</div>
+<button onclick="tambah()">Tambah Keranjang</button>
+</div>
+
+</div>
+
+<footer>
+
+© 2026 HIJAB STORE <br>
+Warna Tema : Hitam • Pink • Putih
+
+</footer>
+
+<script>
+
+let total=0;
+
+function tambah(){
+total++;
+document.getElementById("jumlah").innerHTML=total;
+alert("Produk berhasil ditambahkan ke keranjang.");
+}
+
+function cariProduk(){
+
+let input=document.getElementById("search").value.toLowerCase();
+
+let card=document.getElementsByClassName("card");
+
+for(let i=0;i<card.length;i++){
+
+let nama=card[i].getElementsByTagName("h3")[0].innerHTML.toLowerCase();
+
+if(nama.indexOf(input)>-1){
+card[i].style.display="";
+}else{
+card[i].style.display="none";
+}
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
