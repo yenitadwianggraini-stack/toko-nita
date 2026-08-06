@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HijabStore</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, Helvetica, sans-serif;}
+body{background:#fff;}
+
+/* LOGIN PAGE */
+.login-page{height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(to right,#000,#ff69b4,#fff);}
+.login-box{background:white;padding:40px;border-radius:15px;width:360px;box-shadow:0 5px 20px rgba(0,0,0,0.2);text-align:center;}
+.login-box h2{color:#ff69b4; margin-bottom:20px;}
+.login-box.role-select{display:flex;gap:10px;margin-bottom:15px;}
+.role-select button{flex:1;padding:10px;background:#ddd;border:none;border-radius:10px;cursor:pointer;font-weight:bold;}
+.role-select button.active{background:#ff69b4;color:white;}
+.role-select button.admin.active{background:#000;}
+.login-box input,.login-box select{width:100%;padding:12px;margin:10px 0;border:1px solid #ddd;border-radius:10px;}
+.login-box button.login-btn{width:100%;padding:12px;background:#ff69b4;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:bold;}
+.login-box button.login-btn:hover{opacity:0.8;}
+.note{font-size:12px;margin-top:10px;color:#555;}
+
+/* Navbar */
+header{background:#000;color:white;display:flex;justify-content:space-between;align-items:center;padding:15px 8%;position:sticky;top:0;z-index:10;}
+.logo{font-size:28px;font-weight:bold;color:#ff69b4;}
+nav a{color:white;text-decoration:none;margin-left:20px;font-weight:bold;cursor:pointer;}
+nav a:hover{color:#ff69b4;}
+
+/* Hero */
+.hero{height:330px;background:linear-gradient(to right,#000,#ff69b4,#fff);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+.hero h1{font-size:42px;color:white;}
+.hero p{margin-top:10px;font-size:18px;color:white;}
+.search{margin-top:20px;}
+.search input{padding:12px;width:300px;border-radius:30px;border:none;outline:none;}
+.search button{padding:12px 20px;background:#000;color:white;border:none;border-radius:30px;cursor:pointer;}
+.search button:hover{background:#ff1493;}
+
+/* Kategori */
+.kategori{padding:40px;text-align:center;}
+.kategori h2{margin-bottom:20px;}
+.kategori button{padding:12px 20px;margin:10px;background:#ff69b4;border:none;color:white;border-radius:30px;cursor:pointer;}
+.kategori button:hover{background:black;}
+
+/* Produk */
+.produk{padding:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:25px;}
+.card{background:white;border-radius:15px;overflow:hidden;box-shadow:0px 5px 15px rgba(0,0,0,.2);transition:.3s;cursor:pointer;}
+.card:hover{transform:scale(1.05);}
+.card img{width:100%;height:250px;object-fit:cover;}
+.card h3{padding:10px;}
+.card p{padding:0 10px 10px;color:#ff1493;font-weight:bold;}
+.card button{width:100%;padding:12px;background:black;color:white;border:none;cursor:pointer;}
+.card button:hover{background:#ff69b4;}
+
+/* Admin + Laporan */
+.admin{background:#000;color:white;padding:40px;}
+.admin h2{margin-bottom:20px;}
+.admin input,.admin select{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;}
+.admin button{padding:10px 20px;background:#ff69b4;border:none;color:white;cursor:pointer;border-radius:8px;}
+.admin.filter{display:flex;gap:10px;margin-bottom:15px;}
+.admin table{width:100%;margin-top:20px;background:#222;border-radius:10px;overflow:hidden;}
+.admin table th,.admin table td{padding:12px;text-align:left;border-bottom:1px solid #444;}
+.status-badge{padding:5px 10px;border-radius:20px;font-size:12px;color:white;}
+.status-kirim{background:#ff69b4;}
+.status-selesai{background:#4CAF50;}
+
+/* Footer */
+footer{background:#111;color:white;text-align:center;padding:20px;margin-top:30px;}
+
+/* Hide pages */
+.page{display:none;}
+.page.active{display:block;}
+</style>
+</head>
+<body>
+
+<!-- ========== HALAMAN LOGIN 1 SAJA ========== -->
+<div id="loginPage" class="login-page page active">
+  <div class="login-box">
+    <h2>LOGIN HIJABSTORE</h2>
+    <div class="role-select">
+      <button id="btnCustomer" class="active" onclick="pilihRole('customer')">Customer</button>
+      <button id="btnAdmin" class="admin" onclick="pilihRole('admin')">Admin</button>
+    </div>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button class="login-btn" onclick="login()">Masuk</button>
+    <p class="note">Customer: customer / customer123 <br> Admin: admin / admin123</p>
+  </div>
+</div>
+
+<!-- ========== DASHBOARD CUSTOMER ========== -->
+<div id="customerPage" class="page">
+<header>
+  <div class="logo">HIJAB STORE</div>
+  <nav>
+    <a onclick="showPage('customerPage')">Home</a>
+    <a href="#produkCust">Produk</a>
+    <a href="#statusCust">Status</a>
+    <a onclick="logout()">Logout</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Fashion Hijab Modern</h1>
+  <p>Koleksi Hijab Premium Harga Terbaik</p>
+  <div class="search">
+    <input type="text" id="searchInput" placeholder="Cari Hijab...">
+    <button onclick="cari()">Cari</button>
+  </div>
+</section>
+
+<section class="kategori">
+  <h2>Kategori</h2>
+  <button onclick="kategori('Pashmina')">Pashmina</button>
+  <button onclick="kategori('Segi Empat')">Segi Empat</button>
+  <button onclick="kategori('Instan')">Instan</button>
+  <button onclick="kategori('Bergo')">Bergo</button>
+</section>
+
+<section class="produk" id="produkCust"></section>
+
+<section class="admin" id="statusCust">
+  <h2>Status Pengiriman Saya</h2>
+  <table id="tabelStatusCustomer">
+    <tr><th>No Pesanan</th><th>Produk</th><th>Tanggal</th><th>Status</th></tr>
+  </table>
+</section>
+
+<footer>
+  <h3>© 2026 HIJAB STORE</h3>
+  <p>Belanja Hijab Berkualitas Dengan Harga Terbaik</p>
+</footer>
+</div>
+
+<!-- ========== DASHBOARD ADMIN ========== -->
+<div id="adminPage" class="page">
+<header>
+  <div class="logo">HIJAB STORE - ADMIN</div>
+  <nav>
+    <a onclick="showPage('adminPage')">Dashboard</a>
+    <a href="#adminPanel">Tambah Produk</a>
+    <a href="#laporan">Laporan</a>
+    <a onclick="logout()">Logout</a>
+  </nav>
+</header>
+
+<section class="admin" id="adminPanel">
+  <h2>Panel Admin - Tambah Produk & Pesanan</h2>
+  <input type="text" id="namaProduk" placeholder="Nama Produk">
+  <input type="number" id="hargaProduk" placeholder="Harga">
+  <input type="text" id="urlGambar" placeholder="URL Gambar">
+  <input type="text" id="namaCustomer" placeholder="Nama Customer">
+  <input type="date" id="tglPesanan">
+  <select id="statusPesanan">
+    <option value="Dikirim">Dikirim</option>
+    <option value="Selesai">Selesai</option>
+  </select>
+  <button onclick="tambahProduk()">Tambah Produk + Pesanan</button>
+</section>
+
+<section class="admin" id="laporan">
+  <h2>Laporan Penjualan & Status Pengiriman</h2>
+  <div class="filter">
+    <input type="date" id="tglAwal">
+    <input type="date" id="tglAkhir">
+    <button onclick="filterLaporan()">Filter</button>
+  </div>
+  <table id="tabelLaporan">
+    <tr><th>No</th><th>Customer</th><th>Produk</th><th>Total</th><th>Tanggal</th><th>Status</th><th>Aksi</th></tr>
+  </table>
+</section>
+
+<footer>
+  <h3>© 2026 HIJAB STORE ADMIN</h3>
+</footer>
+</div>
+
+<script>
+let role = 'customer';
+// Data simpan di localStorage
+let produkList = JSON.parse(localStorage.getItem('produk')) || [
+  {nama: "Hijab Pashmina Premium", harga: 75000, gambar: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500"},
+  {nama: "Hijab Segi Empat", harga: 55000, gambar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500"},
+  {nama: "Hijab Instan", harga: 68000, gambar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500"},
+  {nama: "Hijab Bergo", harga: 80000, gambar: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=500"}
+];
+
+let laporanList = JSON.parse(localStorage.getItem('laporan')) || [
+  {no:1, customer:"customer", produk:"Hijab Pashmina Premium", harga:75000, tanggal:"2026-08-01", status:"Dikirim"},
+  {no:2, customer:"customer", produk:"Hijab Segi Empat", harga:55000, tanggal:"2026-08-03", status:"Selesai"}
+];
+
+function pilihRole(r){
+  role = r;
+  document.getElementById('btnCustomer').classList.remove('active');
+  document.getElementById('btnAdmin').classList.remove('active');
+  if(r=='customer') document.getElementById('btnCustomer').classList.add('active');
+  else document.getElementById('btnAdmin').classList.add('active');
+}
+
+function tampilkanProduk(){
+  let container = document.getElementById('produkCust');
+  container.innerHTML = '';
+  produkList.forEach(p => {
+    container.innerHTML += `
+      <div class="card" onclick="beli('${p.nama}')">
+        <img src="${p.gambar}">
+        <h3>${p.nama}</h3>
+        <p>Rp ${p.harga.toLocaleString('id-ID')}</p>
+        <button>Beli Sekarang</button>
+      </div>
+    `;
+  });
+}
+
+function tampilkanLaporan(data = laporanList){
+  let tabel = document.getElementById('tabelLaporan');
+  tabel.innerHTML = `<tr><th>No</th><th>Customer</th><th>Produk</th><th>Total</th><th>Tanggal</th><th>Status</th><th>Aksi</th></tr>`;
+  data.forEach((l, i) => {
+    let statusClass = l.status == 'Dikirim'? 'status-kirim' : 'status-selesai';
+    let aksi = l.status == 'Dikirim'? `<button onclick="ubahStatus(${i})">Selesai</button>` : '-';
+    tabel.innerHTML += `
+      <tr>
+        <td>${i+1}</td><td>${l.customer}</td><td>${l.produk}</td>
+        <td>Rp ${l.harga.toLocaleString('id-ID')}</td><td>${l.tanggal}</td>
+        <td><span class="status-badge ${statusClass}">${l.status}</span></td><td>${aksi}</td>
+      </tr>`;
+  });
+}
+
+function tampilkanStatusCustomer(){
+  let tabel = document.getElementById('tabelStatusCustomer');
+  tabel.innerHTML = `<tr><th>No Pesanan</th><th>Produk</th><th>Tanggal</th><th>Status</th></tr>`;
+  laporanList.filter(l => l.customer == 'customer').forEach((l, i) => {
+    let statusClass = l.status == 'Dikirim'? 'status-kirim' : 'status-selesai';
+    tabel.innerHTML += `
+      <tr><td>#ORD00${i+1}</td><td>${l.produk}</td><td>${l.tanggal}</td>
+      <td><span class="status-badge ${statusClass}">${l.status}</span></td></tr>`;
+  });
+}
+
+function tambahProduk(){
+  let nama = document.getElementById('namaProduk').value;
+  let harga = document.getElementById('hargaProduk').value;
+  let gambar = document.getElementById('urlGambar').value;
+  let customer = document.getElementById('namaCustomer').value;
+  let tanggal = document.getElementById('tglPesanan').value;
+  let status = document.getElementById('statusPesanan').value;
+
+  if(nama && harga && gambar){
+    produkList.push({nama, harga: parseInt(harga), gambar});
+    localStorage.setItem('produk', JSON.stringify(produkList));
+    tampilkanProduk();
+
+    if(customer && tanggal){
+      laporanList.push({no:laporanList.length+1, customer, produk:nama, harga:parseInt(harga), tanggal, status});
+      localStorage.setItem('laporan', JSON.stringify(laporanList));
+      tampilkanLaporan();
+      tampilkanStatusCustomer();
+    }
+    alert("Produk "+nama+" berhasil ditambahkan");
+    document.querySelectorAll('#adminPanel input').forEach(i => i.value = '');
+  } else { alert("Isi Nama, Harga, dan URL Gambar!"); }
+}
+
+function filterLaporan(){
+  let awal = document.getElementById('tglAwal').value;
+  let akhir = document.getElementById('tglAkhir').value;
+  let filtered = laporanList.filter(l => l.tanggal >= awal && l.tanggal <= akhir);
+  tampilkanLaporan(filtered);
+}
+
+function ubahStatus(index){
+  laporanList[index].status = 'Selesai';
+  localStorage.setItem('laporan', JSON.stringify(laporanList));
+  tampilkanLaporan();
+  tampilkanStatusCustomer();
+}
+
+// Login
+function login(){
+  let u = document.getElementById('username').value;
+  let p = document.getElementById('password').value;
+
+  if(role=='admin' && u=='admin' && p=='admin123'){
+    showPage('adminPage'); tampilkanLaporan();
+  }else if(role=='customer' && u=='customer' && p=='customer123'){
+    showPage('customerPage'); tampilkanProduk(); tampilkanStatusCustomer();
+  }else{
+    alert('Username atau Password salah!');
+  }
+}
+function logout(){ showPage('loginPage'); document.getElementById('username').value = ''; document.getElementById('password').value = ''; }
+function showPage(id){ document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function cari(){ alert("Fitur pencarian: "+document.getElementById('searchInput').value); }
+function kategori(nama){ alert("Kategori : "+nama); }
+function beli(nama){ alert("Produk "+nama+" ditambahkan ke keranjang"); }
+
+window.onload = function(){ tampilkanProduk(); }
+</script>
+
+</body>
+</html>
