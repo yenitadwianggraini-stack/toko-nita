@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FashionStore</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, Helvetica, sans-serif;}
+body{background:#fff;}
+
+/* LOGIN PAGE */
+.login-page{height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(to right,#000,#ff69b4,#fff);}
+.login-box{background:white;padding:40px;border-radius:15px;width:360px;box-shadow:0 5px 20px rgba(0,0,0,0.2);text-align:center;}
+.login-box h2{color:#ff69b4; margin-bottom:20px;}
+.role-select{display:flex;gap:10px;margin-bottom:15px;}
+.role-select button{flex:1;padding:10px;background:#ddd;border:none;border-radius:10px;cursor:pointer;font-weight:bold;}
+.role-select button.active{background:#ff69b4;color:white;}
+.role-select button.admin.active{background:#000;}
+.login-box input,.login-box textarea{width:100%;padding:12px;margin:10px 0;border:1px solid #ddd;border-radius:10px;}
+.login-box button.login-btn{width:100%;padding:12px;background:#ff69b4;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:bold;}
+
+/* Navbar */
+header{background:#000;color:white;display:flex;justify-content:space-between;align-items:center;padding:15px 8%;position:sticky;top:0;z-index:10;}
+.logo{font-size:28px;font-weight:bold;color:#ff69b4;}
+nav a{color:white;text-decoration:none;margin-left:20px;font-weight:bold;cursor:pointer;position:relative;}
+.cart-count{background:#ff69b4;color:white;border-radius:50%;padding:2px 7px;font-size:12px;position:absolute;top:-8px;right:-12px;}
+
+/* Hero + Produk */
+.hero{height:350px;background:linear-gradient(to right,#000,#ff69b4,#fff);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;color:white;}
+.produk{padding:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px;}
+.card{background:white;border-radius:15px;overflow:hidden;box-shadow:0px 5px 15px rgba(0,0,0,.2);}
+.card img{width:100%;height:280px;object-fit:cover;}
+.card-content{padding:15px;}
+.card p{color:#ff1493;font-weight:bold;font-size:18px;}
+.card button{width:100%;padding:12px;background:#000;color:white;border:none;cursor:pointer;}
+.card button:hover{background:#ff69b4;}
+
+/* KERANJANG */
+.keranjang-page{padding:40px;min-height:60vh;}
+.keranjang-page h2{text-align:center;margin-bottom:30px;color:#000;}
+.keranjang-item{display:flex;gap:15px;background:white;padding:15px;border-radius:10px;margin-bottom:15px;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+.keranjang-item img{width:100px;height:100px;object-fit:cover;border-radius:10px;}
+.qty-control{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.qty-control button{padding:6px 12px;background:#000;color:white;border:none;border-radius:5px;cursor:pointer;font-weight:bold;}
+.qty-control button:hover{background:#ff69b4;}
+.btn-hapus{background:#ff4d4d;color:white;border:none;padding:10px 15px;border-radius:8px;cursor:pointer;}
+.checkout-box{background:#000;color:white;padding:20px;border-radius:15px;margin-top:20px;}
+.checkout-btn{width:100%;padding:15px;background:#ff69b4;color:white;border:none;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;}
+.empty-cart{text-align:center;padding:50px;color:#777;}
+
+/* Admin */
+.admin{background:#000;color:white;padding:40px;}
+.admin h2{color:#ff69b4;}
+.admin input,.admin textarea{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;}
+.admin button{background:#ff69b4;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;}
+.admin table{width:100%;margin-top:20px;background:#222;border-radius:10px;}
+.admin table th,.admin table td{padding:12px;text-align:left;border-bottom:1px solid #444;}
+.status-badge{padding:5px 10px;border-radius:20px;font-size:12px;color:white;}
+.status-kirim{background:#ff69b4;} .status-selesai{background:#4CAF50;}
+
+.page{display:none;} .page.active{display:block;}
+footer{background:#111;color:white;text-align:center;padding:20px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage" class="login-page page active">
+  <div class="login-box">
+    <h2>LOGIN FASHIONSTORE</h2>
+    <div class="role-select">
+      <button id="btnCustomer" class="active" onclick="pilihRole('customer')">Customer</button>
+      <button id="btnAdmin" class="admin" onclick="pilihRole('admin')">Admin</button>
+    </div>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button class="login-btn" onclick="login()">Masuk</button>
+  </div>
+</div>
+
+<!-- CUSTOMER -->
+<div id="customerPage" class="page">
+<header>
+  <div class="logo">FASHION STORE</div>
+  <nav>
+    <a onclick="showPage('customerPage')">Home</a>
+    <a href="#produkCust">Produk</a>
+    <a onclick="bukaKeranjang()">Keranjang <span id="cartCount" class="cart-count">0</span></a>
+    <a href="#statusCust">Status</a>
+    <a onclick="logout()">Logout</a>
+  </nav>
+</header>
+
+<section class="hero"><h1>Fashion Pria & Wanita Modern</h1></section>
+<section class="produk" id="produkCust"></section>
+
+<!-- HALAMAN KERANJANG -->
+<div id="keranjangPage" class="page keranjang-page">
+  <h2>Keranjang Belanja</h2>
+  <div id="listKeranjang"></div>
+  <div class="checkout-box">
+    <h3 id="totalHarga">Total: Rp 0</h3>
+    <button class="checkout-btn" onclick="checkout()">Pesan Sekarang</button>
+  </div>
+  <button onclick="showPage('customerPage')" style="margin-top:15px;padding:10px;background:#555;color:white;border:none;border-radius:8px;cursor:pointer;">← Kembali Belanja</button>
+</div>
+
+<section class="admin" id="statusCust">
+  <h2>Status Pengiriman Saya</h2>
+  <table id="tabelStatusCustomer"><tr><th>No</th><th>Produk</th><th>Tanggal</th><th>Status</th></tr></table>
+</section>
+<footer>© 2026 FASHION STORE</footer>
+</div>
+
+<!-- ADMIN -->
+<div id="adminPage" class="page">
+<header><div class="logo">FASHION STORE - ADMIN</div></header>
+<section class="admin">
+  <h2>Tambah Produk</h2>
+  <input id="namaProduk" placeholder="Nama Produk">
+  <textarea id="deskripsiProduk" placeholder="Deskripsi"></textarea>
+  <input id="hargaProduk" type="number" placeholder="Harga">
+  <input id="urlGambar" placeholder="URL Gambar">
+  <button onclick="tambahProduk()">Tambah Produk</button>
+</section>
+<section class="admin">
+  <h2>Laporan</h2>
+  <table id="tabelLaporan"><tr><th>No</th><th>Customer</th><th>Produk</th>
