@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulasi Keranjang Belanja</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f9; }
+    .container { display: flex; gap: 20px; }
+    .produk-list, .keranjang { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .produk-list { flex: 2; }
+    .keranjang { flex: 1; }
+    .item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+    button { background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #218838; }
+    .btn-hapus { background: #dc3545; }
+    .btn-hapus:hover { background: #c82333; }
+  </style>
+</head>
+<body>
+
+  <h2>Toko Online Sederhana</h2>
+
+  <div class="container">
+    <!-- Daftar Produk -->
+    <div class="produk-list">
+      <h3>Daftar Produk</h3>
+      <div class="item">
+        <span>Sepatu Sneaker - Rp 250.000</span>
+        <button onclick="tambahKeKeranjang('Sepatu Sneaker', 250000)">+ Keranjang</button>
+      </div>
+      <div class="item">
+        <span>Kaos Polos - Rp 75.000</span>
+        <button onclick="tambahKeKeranjang('Kaos Polos', 75000)">+ Keranjang</button>
+      </div>
+      <div class="item">
+        <span>Tas Punggung - Rp 150.000</span>
+        <button onclick="tambahKeKeranjang('Tas Punggung', 150000)">+ Keranjang</button>
+      </div>
+    </div>
+
+    <!-- Tampilan Keranjang Belanja -->
+    <div class="keranjang">
+      <h3>🛒 Keranjang Kamu</h3>
+      <ul id="daftar-keranjang" style="padding-left: 20px;">
+        <li>Keranjang masih kosong.</li>
+      </ul>
+      <hr>
+      <p><strong>Total: Rp <span id="total-harga">0</span></strong></p>
+    </div>
+  </div>
+
+  <script>
+    let keranjang = [];
+    let totalHarga = 0;
+
+    function tambahKeKeranjang(namaProduk, harga) {
+      keranjang.push({ nama: namaProduk, harga: harga });
+      totalHarga += harga;
+      updateTampilanKeranjang();
+    }
+
+    function updateTampilanKeranjang() {
+      const listElement = document.getElementById("daftar-keranjang");
+      const totalElement = document.getElementById("total-harga");
+
+      // Kosongkan list dulu
+      listElement.innerHTML = "";
+
+      if (keranjang.length === 0) {
+        listElement.innerHTML = "<li>Keranjang masih kosong.</li>";
+      } else {
+        keranjang.forEach((item, index) => {
+          const li = document.createElement("li");
+          li.style.marginBottom = "8px";
+          li.innerHTML = `${item.nama} - Rp ${item.harga.toLocaleString('id-ID')} `;
+          listElement.appendChild(li);
+        });
+      }
+
+      // Update total harga
+      totalElement.innerText = totalHarga.toLocaleString('id-ID');
+    }
+  </script>
+
+</body>
+</html>
